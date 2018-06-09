@@ -11,7 +11,7 @@ public class JDBCConnection {
 	public static JDBCConnection instance=null;
 	private String url="jdbc:mysql://localhost:3306/saylovewall?useSSL=false&characterEncoding=utf-8";
 	private String user="root";
-	private String password="";
+	private String password="123456";
 	private JDBCConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
