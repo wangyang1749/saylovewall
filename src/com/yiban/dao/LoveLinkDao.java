@@ -149,7 +149,6 @@ public class LoveLinkDao {
 					//System.out.println("ps关闭");
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
@@ -241,7 +240,6 @@ public class LoveLinkDao {
 					//System.out.println("ps关闭");
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {
@@ -342,7 +340,6 @@ public class LoveLinkDao {
 					//System.out.println("ps关闭");
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			try {

@@ -62,10 +62,11 @@
 				response.sendRedirect("user/index.jsp");
 			}else{
 				out.println("我是老用户");
+				
 				session.setAttribute("user", ud.findId(backUser.getInt("yb_userid")));
 				response.sendRedirect("user/index.jsp");
 			}	
-			
+			     
 		}
 	
 		

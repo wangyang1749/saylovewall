@@ -6,6 +6,7 @@ public class DaoFactory {
 		if(ud==null) {
 			ud = new UserDao();
 		}
+		
 		return ud;
 	}
 	private static LoveLinkDao love;
