@@ -11,6 +11,7 @@ public class BaseServlet extends HttpServlet {
 
 	/**
 	 * mvc的设计模式
+	 * 默认调用service方法，该方法又默认调用他的父类方法
 	 */
 	private static final long serialVersionUID = 1L;
 
