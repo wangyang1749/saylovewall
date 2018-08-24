@@ -11,6 +11,9 @@ public class LoveLink {
 	private int loveRead;
 	private int loveLike;
 	private String loveTime;
+	private YBUser Self;
+	private YBUser To;
+	private Discuss discuss;
 	public int getId() {
 		return id;
 	}
@@ -72,6 +75,25 @@ public class LoveLink {
 		this.loveTime = loveTime;
 	}
 	
+	
+	public YBUser getSelf() {
+		return Self;
+	}
+	public void setSelf(YBUser self) {
+		Self = self;
+	}
+	public YBUser getTo() {
+		return To;
+	}
+	public void setTo(YBUser to) {
+		To = to;
+	}
+	public Discuss getDiscuss() {
+		return discuss;
+	}
+	public void setDiscuss(Discuss discuss) {
+		this.discuss = discuss;
+	}
 	@Override
 	public String toString() {
 		return "LoveLink [id=" + id + ", myUserId=" + myUserId + ", toUserId=" + toUserId + ", sayLove=" + sayLove

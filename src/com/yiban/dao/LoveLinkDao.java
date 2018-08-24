@@ -13,12 +13,45 @@ import java.util.List;
 import com.yiban.jdbc.JDBCConnection;
 import com.yiban.model.LoveLink;
 import com.yiban.model.LoveList;
+import com.yiban.model.Page;
 import com.yiban.model.YBUser;
 
 public class LoveLinkDao {
 	public static final int PAGESIZE=10;
+	
+	/**
+	 * 从数据库中取得A向B的表白记录
+	 *
+	 */
+	public Page<LoveLink> list(){
+		Connection con = null;
+		PreparedStatement ps=null;
+		ResultSet rs = null;
+		try {
+			con=JDBCConnection.getInstance().getConnection();
+			ps = con.prepareStatement("");
+			rs = ps.executeQuery();
+			rs.next();
+			
+			ps = con.prepareStatement("");
+			rs = ps.executeQuery();
+			rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			JDBCConnection.closePreparedStatement(ps);
+			JDBCConnection.closeResultSet(rs);;
+			JDBCConnection.closeConnection(con);
+		}
+		
+		return null;
+	}
+	
+	/*以上为新添加的方法*/
+	
 	/**
 	 * 发起表白
+	 *@return int
 	 */
 	public int add(LoveLink love) {
 		Connection con = null;
@@ -80,10 +113,7 @@ public class LoveLinkDao {
 			}
 		} 
 	}
-//	public static void main(String[] args) {
-//		System.out.println(new LoveLinkDao().addRead(95));
-//	}
-//	
+
 	
 	
 	/**

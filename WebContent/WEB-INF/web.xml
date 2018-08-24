@@ -49,11 +49,6 @@
     <servlet-name>DiscussServlet</servlet-name>
     <url-pattern>/ds</url-pattern>
   </servlet-mapping>
-  
-  
-
-  
-  
   <servlet>
     <servlet-name>AdminServlet</servlet-name>
     <servlet-class>com.yiban.servlet.AdminServlet</servlet-class>
