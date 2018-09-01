@@ -42,7 +42,16 @@ public class User {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", age=" + age + ", book="
 				+ book + "]";
 	}
-	
+	public User(int id, String username, String password, int age) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.age = age;
+	}
+	public User(){
+		
+	}
 	
 	
 	

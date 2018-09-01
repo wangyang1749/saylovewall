@@ -1,6 +1,8 @@
 package com.yiban.dao;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -14,39 +16,117 @@ import com.yiban.jdbc.JDBCConnection;
 import com.yiban.model.LoveLink;
 import com.yiban.model.LoveList;
 import com.yiban.model.Page;
+import com.yiban.model.Pager;
 import com.yiban.model.YBUser;
 
-public class LoveLinkDao {
+public class LoveLinkDao implements ILoveLinkDao{
 	public static final int PAGESIZE=10;
+	
+	
+	//利用反射读取数据库中的数据
+	private void getObject(Object o,ResultSet rs,String start) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Method[] m = o.getClass().getDeclaredMethods();
+		for(int i=0;i<m.length;i++){
+			String name = m[i].getName();
+			if(name.startsWith("set")){
+				String type = m[i].getParameterTypes()[0].getName();
+				//System.out.println(type);
+				//System.out.println(start+name.substring(3));
+				try {
+					if(type.equals("int")){
+						m[i].invoke(o, rs.getInt(start+name.substring(3)));
+					}else if(type.equals("java.lang.String")){
+						m[i].invoke(o, rs.getString(start+name.substring(3)));
+					}
+				} catch (SQLException e) {
+					continue;
+					//e.printStackTrace();
+				}
+				
+			}
+		}
+	}
 	
 	/**
 	 * 从数据库中取得A向B的表白记录
 	 *
 	 */
-	public Page<LoveLink> list(){
+	public Page<LoveLink> list(int currentRecord){
 		Connection con = null;
 		PreparedStatement ps=null;
 		ResultSet rs = null;
+		String sql=	"select love_link.`id`,love_link.`my_user_id` as myuserid,love_link.`to_user_id` as touserid,love_link.`say_love` as saylove,  " 
+					+"love_link.`love_img` as loveimg,love_link.`love_state` as lovestate,love_link.`read_state` as readState,love_link.`love_like` as lovelike, "
+					+"love_link.`love_time` as loveTime ,love_link.`love_read` as loveRead ,"
+					+ "y1.`yb_userid` AS ybuserid,y1.`yb_username` AS ybusername ,"
+					+ "y2.`yb_userid` as toybuserid,y2.`yb_username` as toybusername ,"
+					+ "y3.`yb_userid` as disybuserid,y3.`yb_username` as disybusername "
+					+" from love_link " 
+					+"left join yb_user As y1 " 
+					+"on love_link.`my_user_id`=y1.`yb_userid` " 
+					+"left join yb_user as y2 " 
+					+"on love_link.`to_user_id`=y2.`yb_userid` " 
+					+"left join love_discuss " 
+					+"on love_link.`id`=love_discuss.`love_link_id` " 
+					+"left join yb_user As y3 " 
+					+"on love_discuss.`user_id`=y3.`yb_userid`";
+		String sql2 ="select count(*)as count from love_link";
+		Page<LoveLink> pages = new Page<LoveLink>();
 		try {
 			con=JDBCConnection.getInstance().getConnection();
-			ps = con.prepareStatement("");
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
+			List<LoveLink> list = new ArrayList<LoveLink>();
+			while(rs.next()){
+				LoveLink lovelink  = new LoveLink();
+				this.getObject(lovelink, rs,"");
+				YBUser myInfo = new YBUser();
+				this.getObject(myInfo, rs,"");
+				YBUser toInfo = new YBUser();
+				this.getObject(toInfo, rs,"to");
+				YBUser disInfo = new YBUser();
+				this.getObject(disInfo, rs,"dis");
+				lovelink.setSelf(myInfo);
+				lovelink.setTo(toInfo);
+				lovelink.setDis(disInfo);
+				list.add(lovelink);
+			}
+			pages.setList(list);
+			rs.close();
+			ps.close();
+			ps = con.prepareStatement(sql2);
 			rs = ps.executeQuery();
 			rs.next();
+			int totalRecord = rs.getInt("count");
+			pages.setTotalRecord(totalRecord);
+			pages.setCurrentRecord(currentRecord);
 			
-			ps = con.prepareStatement("");
-			rs = ps.executeQuery();
-			rs.next();
+			
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
+			JDBCConnection.closeResultSet(rs);
 			JDBCConnection.closePreparedStatement(ps);
-			JDBCConnection.closeResultSet(rs);;
 			JDBCConnection.closeConnection(con);
 		}
-		
-		return null;
+		return pages;
 	}
 	
+	public static void main(String[] args) {
+		Page<LoveLink> pages = new LoveLinkDao().list(5);
+		System.out.println(pages.getList());
+		System.out.println(pages.getTotalRecord());
+	}
 	/*以上为新添加的方法*/
 	
 	/**
@@ -66,6 +146,7 @@ public class LoveLinkDao {
 			ps.setString(4, love.getLoveImg());
 			ps.setInt(5, love.getLoveState());
 			int row =ps.executeUpdate();
+			//TODO
 			return row;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -193,9 +274,9 @@ public class LoveLinkDao {
 		return null;
 	}	
 	
-	public static void main(String[] args) {
-		System.out.println(new LoveLinkDao().findLoveLinkByid(130));
-	}
+//	public static void main(String[] args) {
+//		System.out.println(new LoveLinkDao().findLoveLinkByid(130));
+//	}
 	
 	/**
 	 * admin的列表
@@ -252,6 +333,9 @@ public class LoveLinkDao {
 				love.setLoveState(rs.getInt("love_state"));
 				loves.add(love);
 			}
+			//TODO ceshi
+			ps = con.prepareStatement("");
+			
 			return loves;
 		} catch (SQLException e) {
 			return null;
@@ -411,7 +495,7 @@ public class LoveLinkDao {
 				love.setSayLove(rs.getString("say_love"));
 				love.setLoveImg(rs.getString("love_img"));
 				love.setLoveState(rs.getInt("love_state"));
-				love.setRedState(rs.getInt("read_state"));
+				love.setReadState(rs.getInt("read_state"));
 				love.setLoveRead(rs.getInt("love_read"));
 				love.setLoveLike(rs.getInt("love_like"));
 				love.setLoveTime(rs.getString("love_time"));
@@ -588,7 +672,7 @@ public class LoveLinkDao {
 				love.setSayLove(rs.getString("say_love"));
 				love.setLoveImg(rs.getString("love_img"));
 				love.setLoveState(rs.getInt("love_state"));
-				love.setRedState(rs.getInt("read_state"));
+				love.setReadState(rs.getInt("read_state"));
 				loves.add(love);
 			}
 			
@@ -672,7 +756,7 @@ public class LoveLinkDao {
 				love.setSayLove(rs.getString("say_love"));
 				love.setLoveImg(rs.getString("love_img"));
 				love.setLoveState(rs.getInt("love_state"));
-				love.setRedState(rs.getInt("read_state"));
+				love.setReadState(rs.getInt("read_state"));
 				loves.add(love);
 			}
 			

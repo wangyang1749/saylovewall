@@ -7,12 +7,13 @@ public class LoveLink {
 	private String sayLove;
 	private String loveImg;
 	private int loveState;
-	private int redState;
+	private int readState;
 	private int loveRead;
 	private int loveLike;
 	private String loveTime;
 	private YBUser Self;
 	private YBUser To;
+	private YBUser dis;
 	private Discuss discuss;
 	public int getId() {
 		return id;
@@ -50,11 +51,11 @@ public class LoveLink {
 	public void setLoveState(int loveState) {
 		this.loveState = loveState;
 	}
-	public int getRedState() {
-		return redState;
+	public int getReadState() {
+		return readState;
 	}
-	public void setRedState(int redState) {
-		this.redState = redState;
+	public void setReadState(int readState) {
+		this.readState = readState;
 	}
 	public int getLoveRead() {
 		return loveRead;
@@ -76,6 +77,12 @@ public class LoveLink {
 	}
 	
 	
+	public YBUser getDis() {
+		return dis;
+	}
+	public void setDis(YBUser dis) {
+		this.dis = dis;
+	}
 	public YBUser getSelf() {
 		return Self;
 	}
@@ -97,9 +104,11 @@ public class LoveLink {
 	@Override
 	public String toString() {
 		return "LoveLink [id=" + id + ", myUserId=" + myUserId + ", toUserId=" + toUserId + ", sayLove=" + sayLove
-				+ ", loveImg=" + loveImg + ", loveState=" + loveState + ", redState=" + redState + ", loveRead="
-				+ loveRead + ", loveLike=" + loveLike + ", loveTime=" + loveTime + "]";
+				+ ", loveImg=" + loveImg + ", loveState=" + loveState + ", readState=" + readState + ", loveRead="
+				+ loveRead + ", loveLike=" + loveLike + ", loveTime=" + loveTime + ", Self=" + Self + ", To=" + To
+				+ ", dis=" + dis + ", discuss=" + discuss + "]";
 	}
+	
 	
 	
 	

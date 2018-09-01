@@ -14,6 +14,7 @@ public class Page<P> {
 	private int totalPage;//一共有多少页
 	private int currentPage;//当前是第几页
 	private int pageSize;//一页有多少条数据
+	private int currentRecord;
 	private List<P> list;
 	public int getTotalRecord() {
 		return totalRecord;
@@ -44,6 +45,12 @@ public class Page<P> {
 	}
 	public void setList(List<P> list) {
 		this.list = list;
+	}
+	public int getCurrentRecord() {
+		return currentRecord;
+	}
+	public void setCurrentRecord(int currentRecord) {
+		this.currentRecord = currentRecord;
 	}
 	
 }

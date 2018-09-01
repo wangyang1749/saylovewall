@@ -6,10 +6,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import com.yiban.jdbc.JDBCConnection;
+import com.yiban.model.LoveLink;
 import com.yiban.model.User;
 
 public class JDBCUtil {
@@ -37,11 +41,6 @@ public class JDBCUtil {
 					m[i].invoke(obj, rs.getString(name.substring(3).substring(0,1).toLowerCase()+name.substring(4)));
 					//System.out.println("String"+rs.getString(name.substring(3).substring(0,1).toLowerCase()+name.substring(4)));
 				}
-//				else{
-//					Class c = Class.forName(type);
-//					Object ano = c.newInstance();
-//					rs2Object(rs,ano);
-//				}
 			}	
 		}	
 		return obj;
@@ -121,9 +120,154 @@ public class JDBCUtil {
 		} finally{
 			
 		}
-		
 		return list;
 	}
+	
+	public static int updateQuery(Connection con,String sql,Object... param){
+		PreparedStatement ps = null;
+		int result =0;
+		try {
+			ps = con.prepareStatement(sql);
+			for(int i = 0;i<param.length;i++){
+				int number = i+1;
+				if(param[i] instanceof String){
+					ps.setString(number,(String)param[i]);
+				}else if(param[i] instanceof Integer){
+					ps.setInt(number, (int)param[i]);
+				}
+			}
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			
+		}
+		return result;
+	}
+
+	public static int queryAdd(Connection con,String sql,Object o,Object... param){
+		PreparedStatement ps = null;
+		int result =0;
+		try {
+			ps = con.prepareStatement(sql);
+			for(int i = 0;i<param.length;i++){
+				int number = i+1;
+				if(param[i] instanceof String){
+					ps.setString(number,(String)param[i]);
+				}else if(param[i] instanceof Integer){
+					ps.setInt(number, (int)param[i]);
+				}
+			}
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			
+		}
+		
+		return 0;
+	}
+	
+	
+	public static String joinString(PreparedStatement ps,Object o,String... param) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException{
+		StringBuffer sb = new StringBuffer();
+		StringBuffer sb2 = new StringBuffer();
+		boolean flag=true;
+		sb2.append(") VALUES (");
+		sb.append("INSERT INTO "+param[0]);
+		sb.append("(");
+		for(int i=1;i<param.length;i++){
+			Method m = o.getClass().getMethod("get"+param[i].substring(0,1).toUpperCase()+param[i].substring(1));
+			String type=m.getReturnType().getName();
+			Object obj = m.invoke(o);
+			if(type=="int"){
+				ps.setInt(i, (int)obj);
+			}else if(type=="java.lang.String"){
+				ps.setString(i, (String)obj);
+			}
+			if(flag){
+				sb.append(param[i]);
+				sb2.append("?");
+				flag=false;
+			}else{
+				sb.append(","+param[i]);
+				sb2.append(",?");
+			}
+		}
+		sb2.append(")");
+		sb.append(sb2);
+		return sb.toString();
+		
+	}
+	
+	public static String sqlString(Object o,String... param) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SQLException{
+		StringBuffer sb = new StringBuffer();
+		StringBuffer sb2 = new StringBuffer();
+		boolean flag=true;
+		sb2.append(") VALUES (");
+		sb.append("INSERT INTO "+param[0]);
+		sb.append("(");
+		for(int i=1;i<param.length;i++){
+			if(flag){
+				sb.append(param[i]);
+				sb2.append("?");
+				flag=false;
+			}else{
+				sb.append(","+param[i]);
+				sb2.append(",?");
+			}
+		}
+		sb2.append(")");
+		sb.append(sb2);
+		return sb.toString();
+		
+	}
+	
+	
+	
+	public static int queryAdd2(Connection con,Object o,String... param){
+		PreparedStatement ps = null;
+		int result =0;
+		try {
+			String sql=sqlString(o,param);
+			ps = con.prepareStatement(sql);
+			for(int i=1;i<param.length;i++){
+				Method m = o.getClass().getMethod("get"+param[i].substring(0,1).toUpperCase()+param[i].substring(1));
+				String type=m.getReturnType().getName();
+				Object obj = m.invoke(o);
+				if(type=="int"){
+					ps.setInt(i, (int)obj);
+				}else if(type=="java.lang.String"){
+					ps.setString(i, (String)obj);
+				}
+			}
+			result = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			JDBCConnection.closePreparedStatement(ps);
+			JDBCConnection.closeConnection(con);
+		}
+		return result;
+	}
+	
+	
+	
 	public static void main(String[] args) {
 		String sql="select * from user left join book on user.`id`=book.`id`";
 		Connection con = JDBCConnection.getInstance().getConnection();
@@ -134,5 +278,12 @@ public class JDBCUtil {
 			User u = (User)list.get(i);
 			System.out.println(u.getUsername());
 		}
+		System.out.println("-----------------------------------------");
+		//String sql2 ="DELETE FROM USER WHERE id =?";
+	//	updateQuery(con, sql2,2);
+		//User u = new User(5,"八戒","123456",18);
+		
+		//queryAdd2(con, u, "user","id","username","password","age");
+		
 	}
 }
