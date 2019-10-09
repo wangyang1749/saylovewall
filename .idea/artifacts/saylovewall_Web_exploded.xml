@@ -1,0 +1,29 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="saylovewall:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/saylovewall_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="saylovewall/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="saylovewall" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="module" name="YBOpenApi.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="mysql-connector-java-5.1.44-bin.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="jspsmartupload(1).jar" module-name="saylovewall" />
+          <element id="library" level="module" name="commons-beanutils-1.9.2.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="commons-codec-1.9.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="commons-collections-3.2.1.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="commons-lang-2.6.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="commons-logging-1.2.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="ezmorph-1.0.6.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="httpclient-4.4.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="httpclient-win-4.4.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="httpcore-4.4.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="httpmime-4.4.jar" module-name="saylovewall" />
+          <element id="library" level="module" name="json-lib-2.4-jdk15.jar" module-name="saylovewall" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
