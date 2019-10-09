@@ -95,7 +95,7 @@
 			}
 			str+="</div><p>";
 			if(love[0].img!=""){
-				str+="<img clas='abc_big' src='../"+love[0].img+"' style='width:100%'>";
+				str+="<img clas='abc_big' src="+love[0].img+"'..' style='width:100%'>";
 			}
 		
 			str+="<span>"+love[0].sayLove+"</span></p>";
