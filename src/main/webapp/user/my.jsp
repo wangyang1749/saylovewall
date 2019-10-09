@@ -46,7 +46,7 @@ if(session.getAttribute("user")==null){
 <script src="js/jquery-3.3.1.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-		$.get("lls?action=getloveinfor&userid=<%=session.getAttribute("userid") %>",
+		$.get("/saylovewall/lls?action=getloveinfor&userid=<%=session.getAttribute("userid") %>",
 		function(data,status){
 			 var row =eval(data);
 			 if(row>0){

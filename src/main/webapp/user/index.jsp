@@ -157,7 +157,7 @@ function getlist(data,a){
                    +"</a>"
                    +"</div>"
                    +"<div class='pb'>"
-                   +"<a href="+loves[i].id+"'theme.jsp?id='>"
+                   +"<a href='theme.jsp?id="+loves[i].id+"'>"
                    +"<p>"+loves[i].sayLove;
                    if(loves[i].img!=""){
                    	node+="<img src="+loves[i].img+"'..' style='width: 100%'/>"
