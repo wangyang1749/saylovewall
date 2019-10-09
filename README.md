@@ -7,7 +7,7 @@
  * 将普通JavaWeb项目改为maven项目
  * 本项目目前没有使用任何框架，采用原始的BaseServlet进行路径映射
 ## 运行方案
- * git https://github.com/wangyang1749/saylovewall.git
+ * git clone  https://github.com/wangyang1749/saylovewall.git
  * 将saylovewall的sql导入数据库
  * mvn jetty:run
  * http://localhost:8080
