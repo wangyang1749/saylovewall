@@ -15,6 +15,7 @@
 <%
     UserDao ud = DaoFactory.getUserDao();
     session.setAttribute("user", ud.findId(5201314));
+    session.setAttribute("userid","5201314");
     response.sendRedirect("user/index.jsp");
 %>
 </body>
